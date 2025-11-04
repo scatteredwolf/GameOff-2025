@@ -1,36 +1,45 @@
-[gd_scene load_steps=6 format=3 uid="uid://cnswtyiufgw0k"]
+[gd_scene load_steps=8 format=3 uid="uid://cnswtyiufgw0k"]
 
-[ext_resource type="Texture2D" uid="uid://dl7qr30833l8n" path="res://assets/texture-checker.png" id="1_kpi06"]
-[ext_resource type="Shader" uid="uid://1g66qb0qy05h" path="res://assets/pos_ripples.gdshader" id="2_dfgan"]
-[ext_resource type="Script" uid="uid://bl4p3auk41e0g" path="res://src/RippleTest.cs" id="3_dfgan"]
+[ext_resource type="Texture2D" uid="uid://dfuuius58xfn4" path="res://assets/Map/Background.png" id="1_etxf0"]
+[ext_resource type="Script" uid="uid://cijonp34uwg0v" path="res://src/Player.cs" id="1_sfrgt"]
+[ext_resource type="Texture2D" uid="uid://c05cnnbfbgsrn" path="res://assets/Map/Platform2.png" id="2_etxf0"]
+[ext_resource type="PackedScene" uid="uid://pbf5pigrne7j" path="res://assets/scenes/ripple_overlay.tscn" id="2_kpi06"]
+[ext_resource type="Texture2D" uid="uid://dyf3f60b7j5a" path="res://icon.svg" id="3_etxf0"]
 
-[sub_resource type="GDScript" id="GDScript_mr7gh"]
-script/source = "extends Sprite2D
-"
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vesw4"]
+radius = 21.0
+height = 174.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sfrgt"]
-shader = ExtResource("2_dfgan")
-shader_parameter/ripple_origin = Vector2(0, 0)
-shader_parameter/ripple_radius = 0.0
-shader_parameter/ripple_width = 0.10000000149012
-shader_parameter/uv_scale = Vector2(1, 1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vesw4"]
+size = Vector2(134, 132)
 
 [node name="Node2D" type="Node2D"]
 
-[node name="TextureChecker" type="Sprite2D" parent="."]
-texture = ExtResource("1_kpi06")
-centered = false
-script = SubResource("GDScript_mr7gh")
+[node name="Background" type="Sprite2D" parent="."]
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_etxf0")
 
-[node name="ColorRect" type="ColorRect" parent="TextureChecker" node_paths=PackedStringArray("tileMap")]
-material = SubResource("ShaderMaterial_sfrgt")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 1, 1, 0)
-script = ExtResource("3_dfgan")
-tileMap = NodePath(".")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_etxf0")
 
-[connection signal="gui_input" from="TextureChecker/ColorRect" to="TextureChecker/ColorRect" method="On_button_down"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D"]
+position = Vector2(-8, -4)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_vesw4")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("1_sfrgt")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+position_smoothing_enabled = true
+position_smoothing_speed = 2.0
+drag_horizontal_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_vesw4")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+texture = ExtResource("3_etxf0")
+
+[node name="CanvasLayer" parent="." instance=ExtResource("2_kpi06")]
