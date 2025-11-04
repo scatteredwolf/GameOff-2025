@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://pbf5pigrne7j"]
+
+[ext_resource type="Shader" uid="uid://1g66qb0qy05h" path="res://assets/pos_ripples.gdshader" id="1_jtiwp"]
+[ext_resource type="Script" uid="uid://bl4p3auk41e0g" path="res://src/RippleTest.cs" id="2_44elw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sfrgt"]
+shader = ExtResource("1_jtiwp")
+shader_parameter/ripple_origin = Vector2(0, 0)
+shader_parameter/ripple_radius = 1.0
+shader_parameter/ripple_width = 0.10000000149012
+shader_parameter/uv_scale = Vector2(1, 1)
+
+[node name="GUI" type="CanvasLayer"]
+
+[node name="ColorRect" type="ColorRect" parent="." node_paths=PackedStringArray("tileMap")]
+material = SubResource("ShaderMaterial_sfrgt")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+color = Color(1, 1, 1, 0)
+script = ExtResource("2_44elw")
+tileMap = NodePath(".")
+
+[connection signal="gui_input" from="ColorRect" to="ColorRect" method="On_button_down"]
